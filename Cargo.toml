@@ -1,0 +1,19 @@
+cargo-features = ["panic-immediate-abort"]
+
+[package]
+name = "pyo3-simple-launcher"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+pyo3 = { version = "0.29.2", default-features = false, features = ["abi3"] }
+windows-link = "0.2.1"
+
+[profile.release]
+lto = true
+panic = "immediate-abort"
+codegen-units = 1
+opt-level = "z"
+
+strip = "debuginfo"
+split-debuginfo = "packed"
