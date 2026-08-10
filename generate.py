@@ -46,9 +46,12 @@ def main():
     output_file = TARGET_DIRECTORY / f"{bin_name}.rs"
 
     output_file.write_text(
-        f"""fn main() -> Result<(), Box<dyn std::error::Error>> {{
+        f"""
+#![windows_subsystem = "windows"]
+fn main() -> Result<(), Box<dyn std::error::Error>> {{
     pyo3_simple_launcher::main("{module_path}", "{func_name}")
-}}""",
+}}
+""".lstrip(),
         encoding="utf-8",
     )
 
