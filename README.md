@@ -4,6 +4,12 @@ Alternative `Simple Launcher` in pure rust with `PyO3`, for Windows CPython 3.9+
 
 > [!NOTE]
 > This launcher setups `PYTHONUTF8=1` at runtime for modern environments.
+>
+> Executables are using the `WINDOWS` subsystem by default,
+> with `AllocConsole(-1)` at runtime.
+>
+> For console apps, you may want to allocate a `conhost.exe` on start,
+> which requires the `CONSOLE` subsystem.
 
 ## Build environment variables
 
