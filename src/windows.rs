@@ -18,7 +18,12 @@ windows_link::link!(
 );
 
 pub fn initialize() {
-    let path: Vec<u16> = PYTHON_DLL_PATH.encode_utf16().collect();
+    let path: Vec<u16> = PYTHON_DLL_PATH
+        .chars()
+        .chain(std::iter::once('\0'))
+        .collect::<String>()
+        .encode_utf16()
+        .collect();
 
     unsafe {
         AttachConsole(-1);
