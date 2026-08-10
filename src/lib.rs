@@ -9,7 +9,7 @@ mod windows;
 pub const PYTHON_SYS_PATH: &str = option_env!("PSL_PYTHON_SYS_PATH").unwrap_or(
 "./python-embed-amd64;./python-embed-amd64/python314.zip;./python-embed-amd64/Lib/site-packages");
 
-pub fn main(entry_point: &str) -> Result<(), Box<dyn std::error::Error>> {
+pub fn main(module: &str, func: &str) -> Result<(), Box<dyn std::error::Error>> {
     #[cfg(windows)]
     windows::initialize();
 
@@ -39,7 +39,6 @@ pub fn main(entry_point: &str) -> Result<(), Box<dyn std::error::Error>> {
         sys.setattr("path", sys_path)?;
 
         // Locate module and execute
-        let (module, func) = entry_point.split_once(":").expect("Invalid EntryPoint!");
         let gui = py.import(module)?;
         let func = gui.getattr(func)?;
 

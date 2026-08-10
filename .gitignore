@@ -2,3 +2,7 @@
 /Cargo.lock
 
 /src/bin/
+
+__pycache__
+/uv.lock
+/.python-version
