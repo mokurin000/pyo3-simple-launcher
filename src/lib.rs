@@ -18,7 +18,9 @@ pub fn main(module: &str, func: &str) -> Result<(), Box<dyn std::error::Error>> 
     let exe = current_exe()?
         .to_string_lossy()
         .into_owned()
-        .replace(".exe", "");
+        .replace(".exe", "")
+        .replace(".com", "")
+        .replace(".scr", "");
     let mut sys_argv = vec![exe];
     sys_argv.extend(std::env::args().skip(1));
 
