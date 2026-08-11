@@ -1,21 +1,13 @@
-#![feature(const_option_ops, const_trait_impl)]
-
 use std::env::current_exe;
 
 use pyo3::ffi;
 use pyo3::prelude::*;
 
-mod windows;
-
 pub fn main(module: &str, func: &str) -> Result<(), Box<dyn std::error::Error>> {
-    #[cfg(windows)]
-    windows::link_python();
-
     let exe = current_exe()?
+        .with_extension("")
         .to_string_lossy()
-        .into_owned()
-        .replace(".com", ".exe")
-        .replace(".scr", ".exe");
+        .into_owned();
     let mut sys_argv = vec![exe];
     sys_argv.extend(std::env::args().skip(1));
 
