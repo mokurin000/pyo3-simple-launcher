@@ -1,15 +1,17 @@
 # pyo3-simple-launcher
 
-Alternative `Simple Launcher` in pure rust with `PyO3`, for Windows CPython 3.9+.
+Alternative `Simple Launcher` in pure rust with `PyO3`, for CPython 3.9+.
 
 > [!NOTE]
 > This launcher setups `PYTHONUTF8=1` at runtime for modern environments.
 >
-> Executables are using the `WINDOWS` subsystem by default,
-> with `AllocConsole(-1)` at runtime.
->
-> For console apps, you may want to allocate a `conhost.exe` on start,
-> which requires the `CONSOLE` subsystem.
+## Windows
+
+Executables are using the `WINDOWS` subsystem by default,
+with `AllocConsole(-1)` at runtime.
+
+For console apps, you may want to allocate a `conhost.exe` on start,
+which requires the `CONSOLE` subsystem.
 
 ## Build environment variables
 
@@ -30,20 +32,8 @@ Controls the `sys.path` entries injected into the embedded interpreter (see
 
 ### `PSL_PYTHON_DLL_PATH`
 
-Controls which Python DLL is loaded at startup on Windows (see `src/windows.rs`).
+Controls which Python DLL is loaded at startup on Windows.
+
 The path is passed to `LoadLibraryW`, so it must resolve from the directory of
 the application (or be an absolute path).
 
-
-### `PYO3_PYTHON`
-
-Not read by this crate directly, but required by the `pyo3` build script
-(the crate uses `pyo3` with the `abi3` feature). It tells pyo3 which Python
-interpreter to use at build time. Use any interpreter whose version matches the
-`abi3` target.
-
-- **Example (PowerShell):**
-
-  ```powershell
-  $env:PYO3_PYTHON = "C:\Python\python-embed-amd64\python.exe"
-  ```
