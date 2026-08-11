@@ -40,6 +40,8 @@ def main():
         if subsystem not in ["console", "windows"]:
             print(f"Unsupported subsystem: {subsystem}")
             sys.exit(1)
+    else:
+        subsystem = "windows"
 
     module_path, func_name = split_entrypoint(entry_point)
 
@@ -53,12 +55,16 @@ def main():
     output_file = TARGET_DIRECTORY / f"{bin_name}.rs"
 
     output_file.write_text(
-        f"""
-#![windows_subsystem = "{subsystem}"]
+        (
+            '#![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]'
+            if subsystem == "windows"
+            else ""
+        )
+        + f"""
 fn main() -> Result<(), Box<dyn std::error::Error>> {{
     pyo3_simple_launcher::main("{module_path}", "{func_name}")
 }}
-""".lstrip(),
+""",
         encoding="utf-8",
     )
 
