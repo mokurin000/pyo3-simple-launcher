@@ -1,6 +1,6 @@
 # pyo3-simple-launcher
 
-Alternative `Simple Launcher` in pure rust with `PyO3`, for CPython 3.9+.
+Alternative `Simple Launcher` in pure rust with `PyO3`, for CPython 3.9+ and Windows.
 
 > [!NOTE]
 > This launcher setups `PYTHONUTF8=1` at runtime for modern environments.

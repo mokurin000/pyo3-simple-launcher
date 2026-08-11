@@ -29,11 +29,18 @@ def validate_ascii_identifier(identifier: str):
 
 
 def main():
-    if len(sys.argv) != 3:
-        print(f"Usage: {sys.argv[0]} <BIN_NAME> <ENTRY_POINT>")
+    if len(sys.argv) not in [3, 4]:
+        print(f"Usage: {sys.argv[0]} <BIN_NAME> <ENTRY_POINT> [CONSOLE|WINDOWS]")
         sys.exit(1)
 
-    _, bin_name, entry_point = sys.argv
+    _, bin_name, entry_point = sys.argv[:3]
+
+    if len(sys.argv) > 3:
+        subsystem = sys.argv[3].lower()
+        if subsystem not in ["console", "windows"]:
+            print(f"Unsupported subsystem: {subsystem}")
+            sys.exit(1)
+
     module_path, func_name = split_entrypoint(entry_point)
 
     validate_unicode_xid(bin_name)
@@ -47,7 +54,7 @@ def main():
 
     output_file.write_text(
         f"""
-#![windows_subsystem = "windows"]
+#![windows_subsystem = "{subsystem}"]
 fn main() -> Result<(), Box<dyn std::error::Error>> {{
     pyo3_simple_launcher::main("{module_path}", "{func_name}")
 }}
