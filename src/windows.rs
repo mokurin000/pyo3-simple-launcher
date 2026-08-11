@@ -1,7 +1,6 @@
 use std::ffi::c_void;
 
-const PYTHON_DLL_PATH: &str =
-    option_env!("PSL_PYTHON_DLL_PATH").unwrap_or("./python-embed-amd64/python314.dll");
+const PYTHON_DLL_PATH: &str = option_env!("PSL_PYTHON_DLL_PATH").unwrap_or("./python314.dll");
 
 windows_link::link!(
     "kernel32.dll" "system"
@@ -10,7 +9,7 @@ windows_link::link!(
     ) -> *mut c_void
 );
 
-pub fn initialize() {
+pub fn link_python() {
     let path: Vec<u16> = PYTHON_DLL_PATH
         .chars()
         .chain(std::iter::once('\0'))
