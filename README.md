@@ -10,12 +10,13 @@ Alternative `Simple Launcher` in pure rust with `PyO3`, for CPython 3.9+ and Win
 For example, for CPython 3.14, the packaging layout can be:
 
 ```text
-your-program.exe
-python314.dll
-python314._pth
 Lib/
     site-packages/
     ... files extracted from python-embed.zip
+python3.dll
+python314.dll
+python314._pth
+your-program.exe
 ```
 
 Where the python314._pth contains:
