@@ -1,6 +1,5 @@
 import sys
 from pathlib import Path
-from string import digits, ascii_letters
 
 import regex
 
@@ -13,18 +12,12 @@ def split_entrypoint(entry_point: str) -> tuple[str, str]:
 
 
 def validate_unicode_xid(xid: str):
-    assert regex.fullmatch(r"\p{XID_Start}\p{XID_Continue}*", xid), (
+    assert regex.fullmatch(r"\p{XID_Continue}+", xid), f"Invalid identifier: {xid}"
+
+
+def validate_unicode_fnname(xid: str):
+    assert regex.fullmatch(r"[\p{XID_Start}_]\p{XID_Continue}*", xid), (
         f"Invalid identifier: {xid}"
-    )
-
-
-def validate_ascii_identifier(identifier: str):
-    valid_characters = digits + ascii_letters + "_"
-
-    assert identifier, "identifier must not be empty!"
-    assert identifier[0] not in digits, "identifier must not starts with digits!"
-    assert all(map(lambda ch: ch in valid_characters, identifier)), (
-        "identifier contains invalid character!"
     )
 
 
@@ -46,10 +39,11 @@ def main():
     module_path, func_name = split_entrypoint(entry_point)
 
     validate_unicode_xid(bin_name)
-    validate_unicode_xid(func_name)
 
     for module in module_path.split("."):
-        validate_ascii_identifier(module)
+        validate_unicode_xid(module)
+
+    validate_unicode_fnname(func_name)
 
     TARGET_DIRECTORY.mkdir(exist_ok=True)
     output_file = TARGET_DIRECTORY / f"{bin_name}.rs"
