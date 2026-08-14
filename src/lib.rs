@@ -1,5 +1,6 @@
 use std::env::current_exe;
 
+use pyo3::exceptions::PySystemExit;
 use pyo3::ffi;
 use pyo3::prelude::*;
 
@@ -19,7 +20,6 @@ pub fn main(module: &str, func: &str) -> Result<(), Box<dyn std::error::Error>> 
     Python::attach(|py| {
         // Initialize sys.argv & sys.path
         let sys = py.import("sys")?;
-        let sys_exit = sys.getattr("exit")?;
 
         sys.setattr("argv", sys_argv)?;
 
@@ -39,14 +39,20 @@ pub fn main(module: &str, func: &str) -> Result<(), Box<dyn std::error::Error>> 
         let gui = py.import(module)?;
         let func = gui.getattr(func)?;
 
-        let exit_code = func.call0()?;
-
-        let result = sys_exit.call1((exit_code,)).unwrap_err();
-        let exit_code = result
-            .value(py)
-            .getattr("code")?
-            .extract::<i32>()
-            .unwrap_or_default();
-        std::process::exit(exit_code)
+        match func.call0() {
+            Ok(_) => Ok(()),
+            Err(e) if e.is_instance_of::<PySystemExit>(py) => {
+                let code = e
+                    .value(py)
+                    .getattr("code")?
+                    .extract::<i32>()
+                    .unwrap_or_default();
+                std::process::exit(code)
+            }
+            Err(e) => {
+                e.print(py);
+                std::process::exit(1)
+            }
+        }
     })
 }
